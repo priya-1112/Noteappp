@@ -45,8 +45,6 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<notemodel> notemodelArrayList = new ArrayList<>();
         Note_Adapter noteAdapter = new Note_Adapter(this, notemodelArrayList);
 
-
-        binding.recyclerview.setHasFixedSize(true);
         binding.recyclerview.setAdapter(noteAdapter);
 
         List<notemodel> notemodelList = db.getnotemodelList();
@@ -56,9 +54,6 @@ public class MainActivity extends AppCompatActivity {
             notemodelArrayList.add(notes);
 
         }
-
-
-
 
         launcher= registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                       result-> {
@@ -70,30 +65,25 @@ public class MainActivity extends AppCompatActivity {
                                   notemodel note = db.getnoteid(Integer.parseInt(id));
                                   int updatedPosition = -1;
                                   for (int i = 0; i < notemodelArrayList.size(); i++) {
-                                      if (notemodelArrayList.get(i).getId() == Integer.parseInt(id)) {
+                                      if (notemodelArrayList.get(i).getId() == Integer.parseInt(id)){
                                           updatedPosition = i;
                                           break;
 
                                       }
                                   }
-
-
-                              } else if (result.getResultCode() == 1) {
+                                  Log.d("hii", "hei" + updatedPosition);
                                   notemodelArrayList.clear();
-                                  List<notemodel> notes = db.getnotemodelList();
-                                  notemodelArrayList.addAll(notes);
-                                  noteAdapter.notifyItemInserted(notemodelArrayList.size());
-
+                                  notemodelArrayList.add(note);
+                                  noteAdapter.notifyItemChanged(updatedPosition);
                               }
+                          } else if (result.getResultCode() == 1) {
+                              notemodelArrayList.clear();
+                              List<notemodel> notes = db.getnotemodelList();
+                              notemodelArrayList.addAll(notes);
+                              noteAdapter.notifyItemInserted(notemodelArrayList.size());
 
                           }
-                      }
-
-//
-
-
-
-                          );
+                      });
 
 
 
